@@ -18,5 +18,7 @@ public class PrestamoRequestDTO {
 
     @Min(value = 1, message = "La cantidad debe ser mayor que cero")
     private int cantidad;
+
+    @NotNull(message = "La herramienta es obligatoria")
     private Long herramienta;
 }

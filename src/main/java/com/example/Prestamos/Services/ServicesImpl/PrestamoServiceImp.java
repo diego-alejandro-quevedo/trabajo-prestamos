@@ -9,7 +9,6 @@ import com.example.Prestamos.Repository.HeramientaRepository;
 import com.example.Prestamos.Repository.PrestamoRepository;
 import com.example.Prestamos.Services.PrestamoService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-
 public class PrestamoServiceImp implements PrestamoService {
 
     private final PrestamoRepository prestamoRepository;
@@ -28,12 +26,7 @@ public class PrestamoServiceImp implements PrestamoService {
     @Transactional(readOnly = true)
     public List<PrestamoResponseDTO> consultaPrestamo() {
         return prestamoRepository.findAll().stream()
-                .map(p -> new PrestamoResponseDTO(
-                        p.getResponsable(),
-                        p.getFechaPrestamo(),
-                        p.getCantidad(),
-                        p.getHerramienta() != null ? p.getHerramienta().getId() : null
-                ))
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -45,9 +38,8 @@ public class PrestamoServiceImp implements PrestamoService {
         }
 
         Herramienta herramientaBD = heramientaRepository.findById(prestamo.getHerramienta())
-                .orElseThrow(() -> new RuntimeException("La herramienta especificada no existe"));
+                .orElseThrow(() -> new ResourceNotFoundException("La herramienta especificada no existe"));
 
-        // Validación opcional: Verificar stock si tu entidad Herramienta maneja un campo de cantidad disponible
         if (herramientaBD.getCantidad() < prestamo.getCantidad()) {
             throw new IllegalArgumentException("No hay suficiente stock de la herramienta seleccionada");
         }
@@ -58,38 +50,26 @@ public class PrestamoServiceImp implements PrestamoService {
         nuevoPrestamo.setCantidad(prestamo.getCantidad());
         nuevoPrestamo.setHerramienta(herramientaBD);
 
-        // Opcional: Actualizar el stock de la herramienta al prestarla
-        // herramientaBD.setCantidadDisponible(herramientaBD.getCantidadDisponible() - prestamo.getCantidad());
-        // heramientaRepository.save(herramientaBD);
+        // Nota: el stock NO se descuenta al prestar (ver comentario del resumen).
 
-        Prestamo prestamoGuardado = prestamoRepository.save(nuevoPrestamo);
-
-        PrestamoResponseDTO response = new PrestamoResponseDTO();
-        response.setResponsable(prestamoGuardado.getResponsable());
-        response.setFechaPrestamo(prestamoGuardado.getFechaPrestamo());
-        response.setCantidad(prestamoGuardado.getCantidad());
-        response.setHerramienta(prestamoGuardado.getHerramienta().getId());
-
-        return response;
+        return toDto(prestamoRepository.save(nuevoPrestamo));
     }
 
     @Override
     @Transactional(readOnly = true)
     public PrestamoResponseDTO prestamoId(Long id) {
-        if (!prestamoRepository.existsById(id)) {
-            throw new RuntimeException(
-                    "La herramienta con id " + id + " no existe");
-        }
         return prestamoRepository.findById(id)
-                .map(p -> new PrestamoResponseDTO(
-                        p.getResponsable(),
-                        p.getFechaPrestamo(),
-                        p.getCantidad(),
-                        p.getHerramienta() != null ? p.getHerramienta().getId(): null
-                ))
-                .orElseThrow(() -> new RuntimeException("El préstamo con ID " + id + " no existe"));
+                .map(this::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException("El préstamo con ID " + id + " no existe"));
+    }
+
+    private PrestamoResponseDTO toDto(Prestamo p) {
+        return new PrestamoResponseDTO(
+                p.getId(),
+                p.getResponsable(),
+                p.getFechaPrestamo(),
+                p.getCantidad(),
+                p.getHerramienta() != null ? p.getHerramienta().getId() : null
+        );
     }
 }
-
-
-
