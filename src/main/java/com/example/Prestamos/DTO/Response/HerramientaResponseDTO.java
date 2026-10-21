@@ -11,4 +11,5 @@ public class HerramientaResponseDTO {
     private String nombre;
     private String categoria;
     private Integer cantidad;
+
 }

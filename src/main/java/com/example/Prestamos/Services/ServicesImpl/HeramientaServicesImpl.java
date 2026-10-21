@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -43,6 +44,10 @@ public class HeramientaServicesImpl implements HeramientaServices {
 
     @Override
     public List<HerramientaResponseDTO> consultaHerramientas() {
-        return List.of();
+        return heramientaRepository.findAll().stream().map(h -> new HerramientaResponseDTO(
+                h.getNombre(),
+                h.getCategoria(),
+                h.getCantidad()
+        )).collect(Collectors.toList());
     }
 }
