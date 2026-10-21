@@ -5,7 +5,7 @@ import com.example.Prestamos.DTO.Response.PrestamoResponseDTO;
 import com.example.Prestamos.Entity.Herramienta;
 import com.example.Prestamos.Entity.Prestamo;
 import com.example.Prestamos.Exceptions.ResourceNotFoundException;
-import com.example.Prestamos.Repository.HeramientaRepository;
+import com.example.Prestamos.Repository.HerramientaRepository;
 import com.example.Prestamos.Repository.PrestamoRepository;
 import com.example.Prestamos.Services.PrestamoService;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class PrestamoServiceImp implements PrestamoService {
 
     private final PrestamoRepository prestamoRepository;
-    private final HeramientaRepository heramientaRepository;
+    private final HerramientaRepository heramientaRepository;
 
     @Override
     @Transactional(readOnly = true)

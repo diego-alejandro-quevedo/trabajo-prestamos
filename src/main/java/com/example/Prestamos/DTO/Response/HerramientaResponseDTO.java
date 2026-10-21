@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HerramientaResponseDTO {
-    private Long id;
+    private Long id; // <--- Se agrega el campo ID al inicio
     private String nombre;
     private String categoria;
     private Integer cantidad;

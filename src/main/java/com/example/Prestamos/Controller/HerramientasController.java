@@ -2,7 +2,7 @@ package com.example.Prestamos.Controller;
 
 import com.example.Prestamos.DTO.Request.HerramientaRequestDTO;
 import com.example.Prestamos.DTO.Response.HerramientaResponseDTO;
-import com.example.Prestamos.Services.HeramientaServices;
+import com.example.Prestamos.Services.HerramientaServices;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("api/Herramienta")
 public class HerramientasController {
-    private final HeramientaServices heramientaServices;
+    private final HerramientaServices heramientaServices;
 
     // La ruta conserva el typo "crearHerranienta" para no romper la app móvil.
     @PostMapping("/crearHerranienta")

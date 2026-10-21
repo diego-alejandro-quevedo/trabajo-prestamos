@@ -5,7 +5,7 @@ import com.example.Prestamos.DTO.Response.HerramientaResponseDTO;
 
 import java.util.List;
 
-public interface HeramientaServices {
+public interface HerramientaServices {
     HerramientaResponseDTO crearHerramienta(HerramientaRequestDTO herramienta);
     List<HerramientaResponseDTO> consultaHerramientas();
 
